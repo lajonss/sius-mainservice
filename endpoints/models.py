@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 
 class App(models.Model):
     name = models.CharField(max_length=200)
+    creator = models.ForeignKey(User)
 
 
 class UsedApp(models.Model):
@@ -24,7 +25,7 @@ class UsedApp(models.Model):
     events = None  # TODO
 
 
-class AppEvent(models.Model):
+class AppSession(models.Model):
     used_app = models.ForeignKey(UsedApp)
     start_time = models.DateTimeField()
     duration = models.TimeField()

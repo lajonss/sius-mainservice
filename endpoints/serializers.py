@@ -9,6 +9,8 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class AppSerializer(serializers.ModelSerializer):
+    creator = serializers.ReadOnlyField(source='creator.username')
+
     class Meta:
         model = models.App
 
@@ -18,6 +20,6 @@ class UsedAppSerializer(serializers.ModelSerializer):
         model = models.UsedApp
 
 
-class AppEventSerializer(serializers.ModelSerializer):
+class AppSessionSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.AppEvent
+        model = models.AppSession
