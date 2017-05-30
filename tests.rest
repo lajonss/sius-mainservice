@@ -1,10 +1,27 @@
+# -*- restclient -*-
+:addr = http://127.0.0.1:8000
+:key = 09b69c7e7497beaab8ed1abf145da2761a151191
+
 # login
-POST http://127.0.0.1:8080/api-auth/login
+POST :addr/rest-auth/login/
+Content-Type: application/json
 {
-	username: "admin",
-	password: "adminpass1"
+	"username": "admin",
+	"password": "adminpass1"
 }
 
 
 # GET user
-GET http://127.0.0.1:8080/user/admin
+GET :addr/user/admin/
+
+# POST new app
+POST :addr/app/
+Content-Type: application/json
+Authorization: Token :key
+{
+	"name": "emacs"
+}
+
+# GET app info
+GET :addr/app/emacs/
+
