@@ -22,7 +22,6 @@ class UsedApp(models.Model):
     time_summary = models.TimeField()
     rating = models.CharField(max_length=1, choices=RATINGS)
     notes = models.TextField()
-    events = None  # TODO
 
 
 class AppSession(models.Model):

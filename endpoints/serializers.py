@@ -4,6 +4,7 @@ import endpoints.models as models
 
 
 class UserSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = User
 
@@ -13,13 +14,16 @@ class AppSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.App
+        fields = '__all__'
 
 
 class UsedAppSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = models.UsedApp
 
 
 class AppSessionSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = models.AppSession

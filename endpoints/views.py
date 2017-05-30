@@ -45,9 +45,15 @@ class UserView(APIView):
 
 
 class AppView(APIView):
-    permission_classes = (permissions.IsAuthenticated, )
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly, )
 
     def post(self, request):
         serializer = serializers.AppSerializer(data=request.data)
-        serializer.save(creator=request.user)
+        if serializer.is_valid():
+            serializer.save(creator=request.user)
+            return Response(serializer.data)
+
+    def get(self, request, appname=None):
+        app = models.App.objects.filter(name=appname).get()
+        serializer = serializers.AppSerializer(app)
         return Response(serializer.data)

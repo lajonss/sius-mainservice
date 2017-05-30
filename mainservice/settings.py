@@ -40,6 +40,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
+    'rest_auth',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'rest_auth.registration',
 ]
 
 MIDDLEWARE = [
@@ -135,11 +140,14 @@ REST_FRAMEWORK = {
     )
 }
 
+# REST_AUTH
+SITE_ID = 1
+
 
 # EUREKA conf
 SERVICE_NAME = 'mainservice'
 EUREKA = {
-    'url': 'http://localhost:8765',
+    'url': 'http://vps362165.ovh.net:8765',
     'instance': {
         'ipAddr': '127.0.0.1',
         'app': SERVICE_NAME,
