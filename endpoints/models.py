@@ -24,6 +24,7 @@ class UsedApp(models.Model):
     time_summary = models.DurationField(default=datetime.timedelta())
     rating = models.CharField(max_length=1, choices=RATINGS, blank=True)
     notes = models.TextField(blank=True)
+    current_session = models.ForeignKey('AppSession', null=True)
 
     class Meta:
         unique_together = ['user', 'app']
@@ -31,6 +32,6 @@ class UsedApp(models.Model):
 
 class AppSession(models.Model):
     used_app = models.ForeignKey(UsedApp)
-    start_time = models.DateTimeField(auto_now=True)
-    duration = models.DurationField(default=datetime.timedelta())
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField(default='start_time')
     finished = models.BooleanField(default=False)

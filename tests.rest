@@ -22,7 +22,7 @@ Authorization: Token :key
 GET :addr/app/emacs/
 
 # GET user
-GET :addr/user/admin/
+GET :addr/user/admin1/
 
 # link app to user
 POST :addr/user/
@@ -35,7 +35,6 @@ PUT :addr/user/app/emacs/
 Authorization: Token :key
 Content-Type: application/json
 {
-	"id": 666,
 	"notes": "pozdrawiam"
 }
 
