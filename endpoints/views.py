@@ -10,32 +10,43 @@ import endpoints.serializers as serializers
 
 # API
 # TODO - move to documentation
-# GET /user/<username>
+# GET /user/<username>/
 #   returns all apps used by user <username>
-# POST /user/<username>
+# POST /user/
 #   with payload: <app>
 #   with auth
 #   adds <app> for user <username>
-# GET /app/<app>
+# GET /app/<app>/
 #   returns app <app> global stats
-# POST /app
+# POST /app/
 #   with payload: {name: <app_name>}
 #   with auth
 #   adds new app
-# GET /user/<username>/<app>
+# GET /user/<username>/<app>/
 #   returns user <username>'s stats concerning <app> usage
-# POST /user/<username>/<app>
+# POST /user/<app>/
 #   with auth
 #   creates new session
 #   returns session id
-# PUT /user/<username>/<app>
+# PUT /user/<app>/
 #   with payload: {finished: <has_finished>}
 #   session heartbeat
 #   if (<has_finished>) stops current session
 
 
 class UserView(APIView):
-    permission_classes = (IsAppUserOrReadOnly, )
+    """
+    GET /user/<username>/
+    returns all apps used by user named <username>
+    """
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly, )
+
+    def post(self, request):
+        app = models.App.objects.filter(name=request.data).get()
+        serializer = serializers.UsedAppSerializer(data={})
+        if serializer.is_valid():
+            serializer.save(user=request.user, app=app)
+            return Response(serializer.data)
 
     def get(self, request, username):
         user = User.objects.get(username=username)
@@ -45,6 +56,14 @@ class UserView(APIView):
 
 
 class AppView(APIView):
+    """
+    GET /app/<app>/
+    returns app named <app> global stats
+    POST /app/
+    with payload: {name: <app_name>}
+    with auth
+    creates new app named <app_name>
+    """
     permission_classes = (permissions.IsAuthenticatedOrReadOnly, )
 
     def post(self, request):
@@ -57,3 +76,17 @@ class AppView(APIView):
         app = models.App.objects.filter(name=appname).get()
         serializer = serializers.AppSerializer(app)
         return Response(serializer.data)
+
+
+class UsedAppView(APIView):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly, )
+
+    def post(self, request, appname):
+        app = models.App.objects.filter(name=appname).get()
+        used_app = models.UsedApp.objects.filter(
+            user=request.user, app=app).get()
+        serializer = serializers.AppSessionSerializer(
+            data={'used_app': used_app.id})
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)

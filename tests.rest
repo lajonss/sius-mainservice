@@ -10,10 +10,6 @@ Content-Type: application/json
 	"password": "adminpass1"
 }
 
-
-# GET user
-GET :addr/user/admin/
-
 # POST new app
 POST :addr/app/
 Content-Type: application/json
@@ -25,3 +21,11 @@ Authorization: Token :key
 # GET app info
 GET :addr/app/emacs/
 
+# GET user
+GET :addr/user/admin/
+
+# link app to user
+POST :addr/user/
+Content-Type: application/json
+Authorization: Token :key
+"emacs"

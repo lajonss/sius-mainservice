@@ -18,9 +18,12 @@ class AppSerializer(serializers.ModelSerializer):
 
 
 class UsedAppSerializer(serializers.ModelSerializer):
+    user = serializers.ReadOnlyField(source='user.username')
+    app = serializers.ReadOnlyField(source='app.name')
 
     class Meta:
         model = models.UsedApp
+        fields = '__all__'
 
 
 class AppSessionSerializer(serializers.ModelSerializer):
