@@ -1,7 +1,7 @@
 # API
 
 ## Notes
-* See [tests](tests.rest) for request examples.
+* See [tests](https://raw.githubusercontent.com/lajonss/sius-mainservice/master/tests.rest) for request examples. Link points to raw version because of Github's format misinterpretations.
 * Remember to place an ending slash in request uri.
 
 ## Endpoints
