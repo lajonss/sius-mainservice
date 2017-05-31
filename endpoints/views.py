@@ -24,14 +24,19 @@ import endpoints.serializers as serializers
 #   adds new app
 # GET /user/<username>/<app>/
 #   returns user <username>'s stats concerning <app> usage
-# POST /user/<app>/
+# PUT /user/app/<app>/
+#   with auth
+#   updates user's app metadata (e.g. rating or notes)
+# POST /user/app/<app>/
 #   with auth
 #   creates new session
 #   returns session id
-# PUT /user/<app>/
-#   with payload: {finished: <has_finished>}
+# PUT /user/app/<app>/session/
+#   with auth
 #   session heartbeat
-#   if (<has_finished>) stops current session
+# DELETE /user/app/<app>/session/
+#   with auth
+#   ends current session
 
 
 class UserView(APIView):
@@ -87,6 +92,16 @@ class UsedAppView(APIView):
             user=request.user, app=app).get()
         serializer = serializers.AppSessionSerializer(
             data={'used_app': used_app.id})
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+
+    def put(self, request, appname):
+        app = models.App.objects.filter(name=appname).get()
+        used_app = models.UsedApp.objects.filter(
+            user=request.user, app=app).get()
+        serializer = serializers.UsedAppSerializer(
+            used_app, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)

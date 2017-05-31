@@ -29,3 +29,16 @@ POST :addr/user/
 Content-Type: application/json
 Authorization: Token :key
 "emacs"
+
+# update user's app metadata
+PUT :addr/user/app/emacs/
+Authorization: Token :key
+Content-Type: application/json
+{
+	"id": 666,
+	"notes": "pozdrawiam"
+}
+
+# start new app session
+POST :addr/user/app/emacs/
+Authorization: Token :key

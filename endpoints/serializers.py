@@ -23,6 +23,7 @@ class UsedAppSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.UsedApp
+        read_only_fields = ('time_summary',)
         fields = '__all__'
 
 
@@ -30,3 +31,4 @@ class AppSessionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.AppSession
+        fields = '__all__'
