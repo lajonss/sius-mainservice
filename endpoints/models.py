@@ -33,5 +33,5 @@ class UsedApp(models.Model):
 class AppSession(models.Model):
     used_app = models.ForeignKey(UsedApp)
     start_time = models.DateTimeField()
-    end_time = models.DateTimeField(default='start_time')
+    end_time = models.DateTimeField(null=True)
     finished = models.BooleanField(default=False)

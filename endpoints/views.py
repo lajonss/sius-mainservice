@@ -72,12 +72,12 @@ class UserView(APIView):
 
 class AppView(APIView):
     """
-    GET /app/<app>/
-    returns app named <app> global stats
+    GET /app/<appname>/
+    returns app named <appname> global stats
     POST /app/
-    with payload: {name: <app_name>}
+    with payload: {name: <appname>}
     with auth
-    creates new app named <app_name>
+    creates new app named <appname>
     """
     permission_classes = (permissions.IsAuthenticatedOrReadOnly, )
 
@@ -99,7 +99,29 @@ class AppView(APIView):
 
 
 class UsedAppView(APIView):
+    """
+    GET /user/<username>/<appname>/
+    returns user <username>'s <appname> sessions
+    POST /user/app/<appname>/
+    with payload: {"start_time": <time>}
+    with auth
+    starts new session
+    PUT /user/app/<appname>/
+    with payload: {"notes"(optional): <notes>, "rating"(optional): <rating>}
+    with auth
+    """
     permission_classes = (permissions.IsAuthenticatedOrReadOnly, )
+
+    def get(self, request, username, appname):
+        try:
+            app = models.App.objects.filter(name=appname).get()
+            used_app = models.UsedApp.objects.filter(
+                user=request.user, app=app).get()
+            sessions = models.AppSession.objects.filter(used_app=used_app)
+            serializer = serializers.AppSessionSerializer(sessions, many=True)
+            return Response(serializer.data)
+        except ObjectDoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
     def post(self, request, appname):
         try:
@@ -107,14 +129,15 @@ class UsedAppView(APIView):
             used_app = models.UsedApp.objects.filter(
                 user=request.user, app=app).get()
             session_serializer = serializers.AppSessionSerializer(
-                data={'used_app': used_app.id})
+                data=request.data)
             if session_serializer.is_valid():
-                session = session_serializer.save()
-                used_app_serializer = serializers.UsedAppSerializer(
-                    used_app, data={'current_session': session}, partial=True)
-                if used_app_serializer.is_valid():
-                    used_app_serializer.save()
-                    return Response(session_serializer.data)
+                session = session_serializer.save(used_app=used_app)
+                used_app.current_session = session
+                used_app.save()
+                return Response(session_serializer.data)
+            else:
+                return Response(session_serializer.errors,
+                                status=status.HTTP_400_BAD_REQUEST)
         except ObjectDoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -128,5 +151,67 @@ class UsedAppView(APIView):
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data)
+        except ObjectDoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+class AppSessionView(APIView):
+    """
+    PUT /user/<appname>/session/
+    with auth
+    with payload: {"end_time": <time>}
+    updates current session
+    DELETE /user/<appname>/session/
+    with auth
+    with payload: {"end_time"(optional): <time>}
+    ends current session
+    """
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def put(self, request, appname):
+        try:
+            app = models.App.objects.filter(name=appname).get()
+            used_app = models.UsedApp.objects.filter(
+                user=request.user, app=app).get()
+            session = used_app.current_session
+            print(session)
+            if session is None or session.finished == True:
+                return Response(status=status.HTTP_408_REQUEST_TIMEOUT)
+            else:
+                serializer = serializers.AppSessionSerializer(
+                    session, data=request.data, partial=True)
+                if serializer.is_valid():
+                    serializer.save()
+                    return Response(serializer.data)
+                else:
+                    return Response(serializer.errors,
+                                    status=status.HTTP_400_BAD_REQUEST)
+        except ObjectDoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+    def delete(self, request, appname):
+        try:
+            app = models.App.objects.filter(name=appname).get()
+            used_app = models.UsedApp.objects.filter(
+                user=request.user, app=app).get()
+            session = used_app.current_session
+            if session is None or session.finished:
+                return Response(session, status=status.HTTP_408_REQUEST_TIMEOUT)
+            else:
+                data = {
+                    'finished': True
+                }
+                if 'end_time' in request.data:
+                    data['end_time'] = request.data['end_time']
+                serializer = serializers.AppSessionSerializer(
+                    session, data=data, partial=True)
+                if serializer.is_valid():
+                    saved_session = serializer.save()
+                    used_app.time_summary += saved_session.end_time - saved_session.start_time
+                    used_app.save()
+                    return Response(serializer.data)
+                else:
+                    return Response(serializer.errors,
+                                    status=status.HTTP_400_BAD_REQUEST)
         except ObjectDoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)

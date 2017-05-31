@@ -1,6 +1,6 @@
 # -*- restclient -*-
 :addr = http://127.0.0.1:8000
-:key = 09b69c7e7497beaab8ed1abf145da2761a151191
+:key = f340600cd80455ead9b0982d9c8b7d71db0b03df
 
 # login
 POST :addr/rest-auth/login/
@@ -22,7 +22,7 @@ Authorization: Token :key
 GET :addr/app/emacs/
 
 # GET user
-GET :addr/user/admin1/
+GET :addr/user/admin/
 
 # link app to user
 POST :addr/user/
@@ -40,4 +40,25 @@ Content-Type: application/json
 
 # start new app session
 POST :addr/user/app/emacs/
+Authorization: Token :key
+Content-Type: application/json
+{
+	"start_time": "2017-05-31T22:50:00"
+}
+
+
+# get avail sessions
+GET :addr/user/app/emacs/session/
+Authorization: Token :key
+
+# session heartbeat
+PUT :addr/user/app/emacs/session/
+Authorization: Token :key
+Content-Type: application/json
+{
+	"end_time": "2017-05-31T23:00:10"
+}
+
+# session end
+DELETE :addr/user/app/emacs/session/
 Authorization: Token :key
