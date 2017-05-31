@@ -45,14 +45,5 @@ DELETE /user/<appname>/session/
 
 ### Unimplemented yet
 ```
-GET /user/<username>/<app>/
-	returns user <username>'s stats concerning <app> usage
-POST /user/<app>/
-	with auth
-	creates new session
-	returns session id
-PUT /user/<app>/
-	with payload: {finished: <has_finished>}
-	session heartbeat
-	if (<has_finished>) stops current session
+None for now.
 ```
