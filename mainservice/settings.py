@@ -149,9 +149,9 @@ SERVICE_NAME = 'mainservice'
 EUREKA = {
     'url': 'http://vps362165.ovh.net:8765',
     'instance': {
-        'ipAddr': '127.0.0.1',
+        'ipAddr': '79.137.72.95',
         'app': SERVICE_NAME,
-        'port': 8080
+        'port': 8000
     },
     'heartbeat': 1.0
 }
