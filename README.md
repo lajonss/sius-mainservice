@@ -24,7 +24,7 @@ POST /app/
 	adds new app (global)
 ```
 
-### Yet unimplemented
+### Unimplemented yet
 ```
 GET /user/<username>/<app>/
 	returns user <username>'s stats concerning <app> usage
