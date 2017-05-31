@@ -48,8 +48,8 @@ Content-Type: application/json
 
 
 # get avail sessions
-GET :addr/user/app/emacs/session/
-Authorization: Token :key
+GET :addr/user/admin/emacs/
+
 
 # session heartbeat
 PUT :addr/user/app/emacs/session/

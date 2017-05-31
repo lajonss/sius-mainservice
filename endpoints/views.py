@@ -115,8 +115,9 @@ class UsedAppView(APIView):
     def get(self, request, username, appname):
         try:
             app = models.App.objects.filter(name=appname).get()
+            user = User.objects.filter(username=username).get()
             used_app = models.UsedApp.objects.filter(
-                user=request.user, app=app).get()
+                user=user, app=app).get()
             sessions = models.AppSession.objects.filter(used_app=used_app)
             serializer = serializers.AppSessionSerializer(sessions, many=True)
             return Response(serializer.data)
