@@ -147,7 +147,7 @@ SITE_ID = 1
 # EUREKA conf
 SERVICE_NAME = 'mainservice'
 EUREKA = {
-    'url': 'http://vps362165.ovh.net:8765',
+    'url': 'http://vps362165.ovh.net:8761',
     'instance': {
         'ipAddr': '79.137.72.95',
         'app': SERVICE_NAME,
