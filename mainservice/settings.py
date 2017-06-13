@@ -25,7 +25,7 @@ SECRET_KEY = '-es@$g3*a0oi6tyc#c-d#s%y7cqon%!$&qk3s2-043nn724fa%'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['vps362165.ovh.net', '127.0.0.1', '79.137.72.95']
+ALLOWED_HOSTS = ['vps362165.ovh.net', '127.0.0.1', '79.137.72.95', '*']
 
 
 # Application definition
@@ -147,7 +147,7 @@ SITE_ID = 1
 # EUREKA conf
 SERVICE_NAME = 'mainservice'
 EUREKA = {
-    'url': 'http://vps362165.ovh.net:8761',
+    'url': 'http://vps362165.ovh.net:8765',
     'instance': {
         'ipAddr': '79.137.72.95',
         'app': SERVICE_NAME,
