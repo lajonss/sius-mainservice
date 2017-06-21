@@ -8,6 +8,16 @@
 # token received on login
 :key = f340600cd80455ead9b0982d9c8b7d71db0b03df
 
+#####################################################
+# user list
+GET :addr/user/
+# should return HTTP 200
+[
+  {
+    "username": "admin"
+  }
+]
+
 
 #####################################################
 # login 
