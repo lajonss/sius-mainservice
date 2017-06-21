@@ -48,6 +48,8 @@ class UserView(APIView):
 
 class AppView(APIView):
     """
+    GET /app/
+    returns list of apps
     GET /app/<appname>/
     returns app named <appname> global stats
     POST /app/
@@ -66,12 +68,17 @@ class AppView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, request, appname=None):
-        try:
-            app = models.App.objects.filter(name=appname).get()
-            serializer = serializers.AppSerializer(app)
+        if appname is None:
+            apps = models.App.objects.all()
+            serializer = serializers.AppSerializer(apps, many=True)
             return Response(serializer.data)
-        except ObjectDoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+        else:
+            try:
+                app = models.App.objects.filter(name=appname).get()
+                serializer = serializers.AppSerializer(app)
+                return Response(serializer.data)
+            except ObjectDoesNotExist:
+                return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 class UsedAppView(APIView):
