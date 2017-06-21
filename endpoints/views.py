@@ -28,14 +28,20 @@ class UserView(APIView):
         except ObjectDoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-    def get(self, request, username):
-        try:
-            user = User.objects.get(username=username)
-            used_apps = models.UsedApp.objects.filter(user=user)
-            serializer = serializers.UsedAppSerializer(used_apps, many=True)
+    def get(self, request, username=None):
+        if username is None:
+            users = User.objects.all()
+            serializer = serializers.UserSerializer(users, many=True)
             return Response(serializer.data)
-        except ObjectDoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+        else:
+            try:
+                user = User.objects.get(username=username)
+                used_apps = models.UsedApp.objects.filter(user=user)
+                serializer = serializers.UsedAppSerializer(
+                    used_apps, many=True)
+                return Response(serializer.data)
+            except ObjectDoesNotExist:
+                return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 class AppView(APIView):

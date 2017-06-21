@@ -7,6 +7,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
+        fields = ('username',)
 
 
 class AppSerializer(serializers.ModelSerializer):
