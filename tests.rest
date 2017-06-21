@@ -6,7 +6,7 @@
 # server's address
 :addr = http://127.0.0.1:8000
 # token received on login
-:key = f340600cd80455ead9b0982d9c8b7d71db0b03df
+:key = <insert login key here>
 
 #####################################################
 # user list
@@ -15,6 +15,19 @@ GET :addr/user/
 [
   {
     "username": "admin"
+  }
+]
+
+
+#####################################################
+# app list
+GET :addr/app/
+# should return HTTP 200
+[
+  {
+    "id": 1,
+    "creator": "admin",
+    "name": "The Last Miner"
   }
 ]
 
