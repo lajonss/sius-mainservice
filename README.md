@@ -7,12 +7,16 @@
 
 ## Running dev server
 ```
+git checkout develop
 export MAINSERVICE_DB_PASSWORD=<db password>
 python manage.py runserver
 ```
 
 ## Running in prod
 ### Preparation
+```
+git checkout master
+```
 #### Static files generation
 ```
 python manage.py collectstatic
