@@ -25,7 +25,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '-es@$g3*a0oi6tyc#c-d#s%y7cqon%!$&qk3s2-043nn724fa%'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['vps362165.ovh.net', '127.0.0.1', '79.137.72.95', '*']
 
