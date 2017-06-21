@@ -1,64 +1,190 @@
 # -*- restclient -*-
+
+# Notes
+# - URL's spaces should be escaped with %20
+
+# server's address
 :addr = http://127.0.0.1:8000
+# token received on login
 :key = f340600cd80455ead9b0982d9c8b7d71db0b03df
 
-# login
+
+#####################################################
+# login 
 POST :addr/rest-auth/login/
 Content-Type: application/json
 {
 	"username": "admin",
 	"password": "adminpass1"
 }
+# should return HTTP 200
+{
+  "key": "f340600cd80455ead9b0982d9c8b7d71db0b03df"
+}
+# if login fails returns HTTP 400
+{
+  "non_field_errors": [
+    "Unable to log in with provided credentials."
+  ]
+}
 
+
+#####################################################
 # POST new app
 POST :addr/app/
 Content-Type: application/json
 Authorization: Token :key
 {
-	"name": "emacs"
+	"name": "The Last Miner"
+}
+# should return HTTP 200
+{
+  "id": 2,
+  "creator": "admin",
+  "name": "The Last Miner"
+}
+# if app already exists returns HTTP 400
+{
+  "name": [
+    "app with this name already exists."
+  ]
 }
 
-# GET app info
-GET :addr/app/emacs/
 
+#####################################################
+# GET app info
+GET :addr/app/The Last Miner/
+# should return HTTP 200
+{
+  "id": 2,
+  "creator": "admin",
+  "name": "The Last Miner"
+}
+
+
+#####################################################
 # GET user
 GET :addr/user/admin/
+# should return HTTP 200
+[
+  {
+    "id": 1,
+    "user": "admin",
+    "app": "emacs",
+    "time_summary": "00:10:10",
+    "rating": "",
+    "notes": "pozdrawiam",
+    "current_session": 4
+  }
+]
 
+
+#####################################################
 # link app to user
 POST :addr/user/
 Content-Type: application/json
 Authorization: Token :key
-"emacs"
+"The Last Miner"
+# should return
+{
+  "id": 2,
+  "user": "admin",
+  "app": "The Last Miner",
+  "time_summary": "00:00:00",
+  "rating": "",
+  "notes": "",
+  "current_session": null
+}
 
+
+#####################################################
 # update user's app metadata
-PUT :addr/user/app/emacs/
+PUT :addr/user/admin/The Last Miner/
 Authorization: Token :key
 Content-Type: application/json
 {
-	"notes": "pozdrawiam"
+	"notes": "pozdrawiam",
+	"rating": 3
+}
+# should return HTTP 200
+{
+  "id": 2,
+  "user": "admin",
+  "app": "The Last Miner",
+  "time_summary": "00:00:00",
+  "rating": "3",
+  "notes": "pozdrawiam",
+  "current_session": null
 }
 
+
+#####################################################
 # start new app session
-POST :addr/user/app/emacs/
+POST :addr/user/admin/The Last Miner/
 Authorization: Token :key
 Content-Type: application/json
 {
-	"start_time": "2017-05-31T22:50:00"
+	"start_time": "2017-06-21T15:44:00"
+}
+# should return HTTP 200
+{
+  "id": 5,
+  "start_time": "2017-06-21T15:44:00Z",
+  "end_time": null,
+  "finished": false,
+  "used_app": 2
 }
 
 
+
+#####################################################
 # get avail sessions
-GET :addr/user/admin/emacs/
+GET :addr/user/admin/The Last Miner/
+# should return HTTP 200
+[
+  {
+    "id": 5,
+    "start_time": "2017-06-21T15:44:00Z",
+    "end_time": null,
+    "finished": false,
+    "used_app": 2
+  }
+]
 
 
+
+#####################################################
 # session heartbeat
-PUT :addr/user/app/emacs/session/
+PUT :addr/user/admin/The Last Miner/session/
 Authorization: Token :key
 Content-Type: application/json
 {
-	"end_time": "2017-05-31T23:00:10"
+	"end_time": "2017-06-21T15:45:00"
+}
+# should return HTTP 200
+{
+  "id": 5,
+  "start_time": "2017-06-21T15:44:00Z",
+  "end_time": "2017-06-21T15:45:00Z",
+  "finished": false,
+  "used_app": 2
 }
 
+
+#####################################################
 # session end
-DELETE :addr/user/app/emacs/session/
+DELETE :addr/user/admin/The Last Miner/session/
 Authorization: Token :key
+Content-Type: application/json
+{
+	"end_time": "2017-06-21T15:46:00"
+}
+# should return HTTP 200
+{
+  "id": 5,
+  "start_time": "2017-06-21T15:44:00Z",
+  "end_time": "2017-06-21T15:46:00Z",
+  "finished": true,
+  "used_app": 2
+}
+
