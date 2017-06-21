@@ -7,7 +7,6 @@
 
 ## Running dev server
 ```
-git checkout develop
 export MAINSERVICE_DB_PASSWORD=<db password>
 python manage.py runserver
 ```
@@ -23,7 +22,6 @@ Static assets will be available in build directory.
 Check [nginx.conf](./nginx.conf) for proposed configuration. Remember to change static files directories to your liking.
 ### Running
 ```
-git checkout master
 export MAINSERVICE_DB_PASSWORD=<db password>
 gunicorn mainservice.wsgi -b 127.0.0.1:8998
 sudo systemctl start nginx
