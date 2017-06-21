@@ -11,6 +11,8 @@ import endpoints.serializers as serializers
 
 class UserView(APIView):
     """
+    GET /user/
+    returns list of users
     GET /user/<username>/
     returns all apps used by user named <username>
     """
