@@ -8,38 +8,6 @@ from endpoints.permissions import IsAppUserOrReadOnly
 import endpoints.models as models
 import endpoints.serializers as serializers
 
-# Create your views here.
-
-# API
-# TODO - move to documentation
-# GET /user/<username>/
-#   returns all apps used by user <username>
-# POST /user/
-#   with payload: <app>
-#   with auth
-#   adds <app> for user <username>
-# GET /app/<app>/
-#   returns app <app> global stats
-# POST /app/
-#   with payload: {name: <app_name>}
-#   with auth
-#   adds new app
-# GET /user/<username>/<app>/
-#   returns user <username>'s stats concerning <app> usage
-# PUT /user/app/<app>/
-#   with auth
-#   updates user's app metadata (e.g. rating or notes)
-# POST /user/app/<app>/
-#   with auth
-#   creates new session
-#   returns session id
-# PUT /user/app/<app>/session/
-#   with auth
-#   session heartbeat
-# DELETE /user/app/<app>/session/
-#   with auth
-#   ends current session
-
 
 class UserView(APIView):
     """
@@ -102,11 +70,11 @@ class UsedAppView(APIView):
     """
     GET /user/<username>/<appname>/
     returns user <username>'s <appname> sessions
-    POST /user/app/<appname>/
+    POST /user/<username>/<appname>/
     with payload: {"start_time": <time>}
     with auth
     starts new session
-    PUT /user/app/<appname>/
+    PUT /user/<username>/<appname>/
     with payload: {"notes"(optional): <notes>, "rating"(optional): <rating>}
     with auth
     """
@@ -124,8 +92,10 @@ class UsedAppView(APIView):
         except ObjectDoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-    def post(self, request, appname):
+    def post(self, request, username, appname):
         try:
+            if username != request.user.username:
+                return Response("User authorization failed.", status=status.HTTP_403_FORBIDDEN)
             app = models.App.objects.filter(name=appname).get()
             used_app = models.UsedApp.objects.filter(
                 user=request.user, app=app).get()
@@ -142,8 +112,10 @@ class UsedAppView(APIView):
         except ObjectDoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-    def put(self, request, appname):
+    def put(self, request, username, appname):
         try:
+            if username != request.user.username:
+                return Response("User authorization failed.", status=status.HTTP_403_FORBIDDEN)
             app = models.App.objects.filter(name=appname).get()
             used_app = models.UsedApp.objects.filter(
                 user=request.user, app=app).get()
@@ -158,19 +130,21 @@ class UsedAppView(APIView):
 
 class AppSessionView(APIView):
     """
-    PUT /user/<appname>/session/
+    PUT /user/<username>/<appname>/session/
     with auth
     with payload: {"end_time": <time>}
     updates current session
-    DELETE /user/<appname>/session/
+    DELETE /user/<username>/<appname>/session/
     with auth
     with payload: {"end_time"(optional): <time>}
     ends current session
     """
     permission_classes = (permissions.IsAuthenticated,)
 
-    def put(self, request, appname):
+    def put(self, request, username, appname):
         try:
+            if username != request.user.username:
+                return Response("User authorization failed.", status=status.HTTP_403_FORBIDDEN)
             app = models.App.objects.filter(name=appname).get()
             used_app = models.UsedApp.objects.filter(
                 user=request.user, app=app).get()
@@ -190,8 +164,10 @@ class AppSessionView(APIView):
         except ObjectDoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-    def delete(self, request, appname):
+    def delete(self, request, username, appname):
         try:
+            if username != request.user.username:
+                return Response("User authorization failed.", status=status.HTTP_403_FORBIDDEN)
             app = models.App.objects.filter(name=appname).get()
             used_app = models.UsedApp.objects.filter(
                 user=request.user, app=app).get()
