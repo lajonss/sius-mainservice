@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+from django.utils.crypto import get_random_string
 
 DB_PASSWORD = os.getenv('SIUSMAINSERVICE_DB_PASSWORD')
 
@@ -162,7 +163,18 @@ EUREKA = {
     'instance': {
         'ipAddr': '79.137.72.95',
         'app': SERVICE_NAME,
-        'port': 8000
+        'port': 8000,
+        'instanceId': get_random_string(length=24),
+        'hostname': 'vps362165.ovh.net',
+        'homePageUrl': 'http://vps362165.ovh.net:8000/',
+        'healthCheckUrl': 'http://vps362165.ovh.net:8000/',
+        'statusPageUrl': 'http://vps362165.ovh.net:8000/',
+        'leaseInfo': {
+            'renewalIntervalInSecs': 10,
+            'durationInSecs': 90
+        },
+        'vipAddress': 'mainservice',
+        'secureVipAddress': 'mainservice'
     },
     'heartbeat': 1.0
 }

@@ -1,5 +1,6 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
+from django.http import JsonResponse
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -188,7 +189,8 @@ class AppSessionView(APIView):
                 user=request.user, app=app).get()
             session = used_app.current_session
             if session is None or session.finished:
-                return Response(session, status=status.HTTP_408_REQUEST_TIMEOUT)
+                serializer = serializers.AppSessionSerializer(session)
+                return Response(serializer.data, status=status.HTTP_408_REQUEST_TIMEOUT)
             else:
                 data = {
                     'finished': True
@@ -207,3 +209,7 @@ class AppSessionView(APIView):
                                     status=status.HTTP_400_BAD_REQUEST)
         except ObjectDoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+def empty_view(request):
+    return JsonResponse({"status": "ok"})
