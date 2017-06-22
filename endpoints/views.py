@@ -188,7 +188,8 @@ class AppSessionView(APIView):
                 user=request.user, app=app).get()
             session = used_app.current_session
             if session is None or session.finished:
-                return Response(session, status=status.HTTP_408_REQUEST_TIMEOUT)
+                serializer = serializers.AppSessionSerializer(session)
+                return Response(serializer.data, status=status.HTTP_408_REQUEST_TIMEOUT)
             else:
                 data = {
                     'finished': True
