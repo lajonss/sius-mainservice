@@ -1,5 +1,6 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
+from django.http import JsonResponse
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -208,3 +209,7 @@ class AppSessionView(APIView):
                                     status=status.HTTP_400_BAD_REQUEST)
         except ObjectDoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+def empty_view(request):
+    return JsonResponse({"status": "ok"})

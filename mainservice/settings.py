@@ -167,8 +167,8 @@ EUREKA = {
         'instanceId': get_random_string(length=24),
         'hostname': 'vps362165.ovh.net',
         'homePageUrl': 'http://vps362165.ovh.net:8000/',
-        'healthCheckUrl': 'http://vps362165.ovh.net:8000/info',
-        'statusPageUrl': 'http://vps362165.ovh.net:8000/status',
+        'healthCheckUrl': 'http://vps362165.ovh.net:8000/',
+        'statusPageUrl': 'http://vps362165.ovh.net:8000/',
         'leaseInfo': {
             'renewalIntervalInSecs': 10,
             'durationInSecs': 90

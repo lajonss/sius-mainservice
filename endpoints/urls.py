@@ -12,4 +12,7 @@ urlpatterns = [
         views.AppSessionView.as_view()),
     url(r'^app/$', views.AppView.as_view()),
     url(r'^app/(?P<appname>([^\s]| )+)/$', views.AppView.as_view()),
+    url(r'^health/$', views.empty_view),
+    url(r'^status/$', views.empty_view),
+    url(r'^$', views.empty_view)
 ]
